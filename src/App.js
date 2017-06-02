@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
 import './App.css';
+import Textarea from 'react-textarea-autosize';
 
 class MenuItem extends React.Component {
   constructor() {
@@ -23,73 +24,35 @@ class MenuItem extends React.Component {
   render() {
     // debugger;
     return (
-      <li className="menu-item" onClick={() => this.handleClick()}>
-        <h5 className="item-name">{this.props.name}</h5>
-        <p className="item-description">{this.props.description}</p>
-        <p className="item-price">{this.props.price}</p>
-        { this.state.editing ?
-          <MenuItemForm
-            name={this.props.name}
-            description={this.props.description}
-            price={this.props.price}
-            itemIndex={this.props.itemIndex}
-            onItemChange={this.props.onItemChange}
-            onDoneEditing={(e) => this.handleDoneEditing(e)}
-          />
-          : null
-        }
+      <li className={"menu-item " + (this.state.editing ? 'editing' : '')} onClick={() => this.handleClick()}>
+        <Textarea
+          name="name"
+          defaultValue={this.props.name}
+          className="item-name"
+          placeholder="Item Name"
+          data-item-index={this.props.itemIndex}
+          onChange={this.props.onItemChange}
+        ></Textarea>
+        <Textarea
+          name="description"
+          defaultValue={this.props.description}
+          className="item-description"
+          placeholder="Item description"
+          data-item-index={this.props.itemIndex}
+          onChange={this.props.onItemChange}
+        ></Textarea>
+        <Textarea
+          name="price"
+          defaultValue={this.props.price}
+          className="item-price"
+          placeholder="$5.99"
+          data-item-index={this.props.itemIndex}
+          onChange={this.props.onItemChange}
+        ></Textarea>
       </li>
     );
   }
 }
-
-
-class MenuItemForm extends React.Component {
-  render() {
-    return (
-      <form onChange={this.props.onItemChange}>
-        <div className="form-group">
-          <label htmlFor="name">Item name</label>
-          <input
-            type="text"
-            name="name"
-            defaultValue={this.props.name}
-            data-item-index={this.props.itemIndex}
-            autoFocus
-            className="form-control"
-            placeholder="Item Name"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="description">Description</label>
-          <textarea
-            name="description"
-            defaultValue={this.props.description}
-            data-item-index={this.props.itemIndex}
-            className="form-control"
-            placeholder="item description"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="price">Price</label>
-          <input
-            type="text"
-            name="price"
-            defaultValue={this.props.price}
-            data-item-index={this.props.itemIndex}
-            className="form-control"
-            placeholder="$0"
-          />
-        </div>
-        <button
-          onClick={this.props.onDoneEditing}
-          className="btn btn-primary"
-        >Done</button>
-      </form>
-    );
-  }
-}
-
 
 class Menu extends React.Component {
   constructor() {
@@ -107,7 +70,8 @@ class Menu extends React.Component {
       },
       {
         name: 'Black Pepper Pastry',
-        description: 'Mini-loaves of black pepper-studed pain au lait',
+        description: 'Mini-loaves of black pepper-studded pain au lait',
+        // description: '1-2-3-4-5-6-7-8-9-1-2-3-4-5-6-7-8-9-1-2-3-4-5-6-7-8-9-1-2-3-4-5-6-*-8-9-1-2-3-4-5-6-7-8-9-1-2-3-4-5-6-7-8-9',
         price: '$7'
       },
       {
@@ -123,9 +87,26 @@ class Menu extends React.Component {
     ]
     this.state = {
       items: defaultItems,
-      title: 'Daily Specials',
-      date: formatDate(new Date())
+      title: 'Today\'s Specials',
+      date: formatDate(new Date()),
+
+      // could probably be props
+      titlePlaceholder: 'Today\'s Specials',
+      datePlaceholdler: formatDate(new Date())
     }
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    // debugger;
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
   }
 
   handleItemChange(event) {
@@ -152,13 +133,6 @@ class Menu extends React.Component {
     // console.log('wtf');
   }
 
-  makePdf() {
-    var pageHtml = document.documentElement.innerHTML;
-    pageHtml = pageHtml.replace('<body>', '<body class="printing">');
-    document.getElementById('pdfHtml').value = pageHtml;
-    document.getElementById('pdfName').value = this.state.title + ' - ' + this.state.date;
-  }
-
   render() {
     const items = this.state.items.map((item, index) => {
       // debugger;
@@ -175,51 +149,55 @@ class Menu extends React.Component {
     });
 
     return (
-      <div>
-        <div className="menu menu-preview classic letter-2">
-          <h2 className="menu-title font-header">
-            {this.state.title}
-          </h2>
-          <h4 className="menu-date font-body">
-            {this.state.date}
-          </h4>
+      <div className="menu classic letter-2" id="master-menu" title={this.state.title + ' - ' + this.state.date}>
+        <Textarea
+          name="title"
+          defaultValue={this.state.title}
+          className="menu-title font-header"
+          placeholder={this.state.titlePlaceholder}
+          onChange={this.handleChange}
+        ></Textarea>
+        <Textarea
+          name="date"
+          defaultValue={this.state.date}
+          className="menu-date font-body"
+          placeholder={this.state.datePlaceholder}
+          onChange={this.handleChange}
+        ></Textarea>
 
-          <ol className="menu-items list-unstyled">
-            {items}
-            <li className="no-print">
-              <button onClick={() => this.handleAddItem()} className="btn btn-outline-secondary">+ Add Item</button>
-            </li>
-          </ol>
+        <ol className="menu-items list-unstyled">
+          {items}
+          <li className="no-print">
+            <button onClick={() => this.handleAddItem()} className="btn btn-outline-secondary">+ Add Item</button>
+          </li>
+        </ol>
+      </div>
+    );
+  }
+}
+
+class MenuContainer extends React.Component {
+  makePdf() {
+    var pageHtml = document.documentElement.innerHTML;
+    pageHtml = pageHtml.replace('<body>', '<body class="printing">');
+    document.getElementById('pdfHtml').value = pageHtml;
+    const pdfName = simpleEncode(document.getElementById('master-menu').title);
+    document.getElementById('pdfName').value = pdfName;
+  }
+
+  render() {
+    return (
+      <div className="menu-container">
+        <div className="menu-preview">
+          <Menu />
         </div>
         <div className="menu-print">
           <div className="row">
             <div className="col-xs-6">
-              <div className="menu classic letter-2">
-                <h2 className="menu-title font-header">
-                  {this.state.title}
-                </h2>
-                <h4 className="menu-date font-body">
-                  {this.state.date}
-                </h4>
-
-                <ol className="menu-items list-unstyled">
-                  {items}
-                </ol>
-              </div>
+              <Menu />
             </div>
             <div className="col-xs-6">
-              <div className="menu classic letter-2">
-                <h2 className="menu-title font-header">
-                  {this.state.title}
-                </h2>
-                <h4 className="menu-date font-body">
-                  {this.state.date}
-                </h4>
-
-                <ol className="menu-items list-unstyled">
-                  {items}
-                </ol>
-              </div>
+              <Menu />
             </div>
           </div>
         </div>
@@ -231,15 +209,13 @@ class Menu extends React.Component {
           <input type="hidden" name="doc[test]" value="true" />
           <input type="hidden" name="doc[prince_options][media]" value="screen" />
           <p className="text-xs-center no-print">
-            <button onClick={() => this.makePdf()} className="btn btn-success btn-lg">Download PDF</button>
+            <button onClick={() => this.makePdf()} className="btn btn-success btn-lg">Download PDF for Printing</button>
           </p>
         </form>
       </div>
     );
   }
 }
-
-
 
 
 function formatDate(date) {
@@ -255,6 +231,13 @@ function formatDate(date) {
   // var year = date.getFullYear();
 
   return monthNames[monthIndex] + ' ' + ordinalize(day);
+}
+
+function simpleEncode(s) {
+    if (s==='') return '_';
+    return s.replace(/[^a-zA-Z0-9.-]/g, function(match) {
+        return '_'+match[0].charCodeAt(0).toString(16)+'_';
+    });
 }
 
 function ordinalize(i) {
@@ -276,7 +259,7 @@ function ordinalize(i) {
 class App extends Component {
   render() {
     return (
-      <Menu />
+      <MenuContainer />
     );
   }
 }
