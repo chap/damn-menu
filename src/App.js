@@ -177,16 +177,22 @@ class Menu extends React.Component {
 }
 
 class MenuContainer extends React.Component {
-  makePdf() {
-    var pageHtml = document.documentElement.innerHTML;
-    pageHtml = pageHtml.replace('<body>', '<body class="printing">');
-    document.getElementById('pdfHtml').value = pageHtml;
-
+  makePdf(e) {
     const pdfName = simpleEncode(document.getElementById('master-menu').title);
     document.getElementById('pdfName').value = pdfName;
 
     const baseUrl = window.location.protocol + '//' + window.location.host;
     document.getElementById('baseUrl').value = baseUrl;
+
+    const menuHtml = document.getElementsByClassName("menu-preview")[0].innerHTML;
+    const x = document.querySelectorAll(".menu-print-holder");
+    for (let i = 0; i < x.length; i++) {
+        x[i].innerHTML = menuHtml;
+    }
+
+    var pageHtml = document.documentElement.innerHTML;
+    pageHtml = pageHtml.replace('<body>', '<body class="printing">');
+    document.getElementById('pdfHtml').value = pageHtml;
   }
 
   render() {
@@ -197,11 +203,9 @@ class MenuContainer extends React.Component {
         </div>
         <div className="menu-print">
           <div className="row">
-            <div className="col-xs-6">
-              <Menu />
+            <div className="col-xs-6 menu-print-holder">
             </div>
-            <div className="col-xs-6">
-              <Menu />
+            <div className="col-xs-6 menu-print-holder">
             </div>
           </div>
         </div>
@@ -214,7 +218,7 @@ class MenuContainer extends React.Component {
           <input type="hidden" name="doc[prince_options][media]" value="screen" />
           <input type="hidden" name="doc[prince_options][baseurl]" id="baseUrl" value="screen" />
           <p className="text-xs-center no-print">
-            <button onClick={() => this.makePdf()} className="btn btn-success btn-lg">Download PDF for Printing</button>
+            <button onClick={(e) => this.makePdf(e)} className="btn btn-success btn-lg">Download PDF for Printing</button>
           </p>
         </form>
       </div>
@@ -241,7 +245,7 @@ function formatDate(date) {
 function simpleEncode(s) {
     if (s==='') return '_';
     return s.replace(/[^a-zA-Z0-9.-]/g, function(match) {
-        return '_'+match[0].charCodeAt(0).toString(16)+'_';
+        return '';
     });
 }
 
