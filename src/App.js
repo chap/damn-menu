@@ -181,8 +181,12 @@ class MenuContainer extends React.Component {
     var pageHtml = document.documentElement.innerHTML;
     pageHtml = pageHtml.replace('<body>', '<body class="printing">');
     document.getElementById('pdfHtml').value = pageHtml;
+
     const pdfName = simpleEncode(document.getElementById('master-menu').title);
     document.getElementById('pdfName').value = pdfName;
+
+    const baseUrl = location.protocol + '//' + location.host;
+    document.getElementById('baseUrl').value = baseUrl;
   }
 
   render() {
@@ -208,6 +212,7 @@ class MenuContainer extends React.Component {
           <input type="hidden" name="doc[type]" value="pdf" />
           <input type="hidden" name="doc[test]" value="true" />
           <input type="hidden" name="doc[prince_options][media]" value="screen" />
+          <input type="hidden" name="doc[prince_options][baseurl]" value="screen" />
           <p className="text-xs-center no-print">
             <button onClick={() => this.makePdf()} className="btn btn-success btn-lg">Download PDF for Printing</button>
           </p>
