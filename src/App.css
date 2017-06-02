@@ -1,0 +1,44 @@
+.menu {
+  /*background-image: image-url('patterns/linen.png');*/
+  border: 1px solid #eee;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  padding-top: 5rem;
+}
+
+ol.menu-items {
+  list-style-type: none;
+  padding-left: 0;
+  padding: 0 1rem;
+}
+
+.menu-item, .menu-date {
+  margin-bottom: 4rem;
+}
+
+.menu-item p {
+  margin-bottom: 0;
+  min-height: 1rem;
+}
+
+.menu-item form {
+  background-color: #eee;
+  padding: 1rem;
+}
+
+/* Letter 1/2 */
+.menu.letter-2 {
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* Classic */
+@import url('https://fonts.googleapis.com/css?family=EB+Garamond|Fondamento');
+.classic.menu {
+  text-align: center;
+}
+.classic.menu .font-header, .classic.menu .item-name {
+  font-family: 'Fondamento', cursive;
+}
+.classic.menu .font-body, .classic.menu .item-description, .classic.menu .item-price {
+  font-family: 'EB Garamond', serif;
+}
