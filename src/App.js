@@ -102,7 +102,7 @@ class Menu extends React.Component {
       },
       {
         name: 'Cacio e Pepe',
-        description: 'Blue durum wheat and fermented tomato water',
+        description: 'Blue durum wheat, Parmigiano-Reggiano, and fermented tomato water',
         price: '$13'
       },
       {
@@ -153,11 +153,10 @@ class Menu extends React.Component {
   }
 
   makePdf() {
-    const elementToPrint = document.getElementById('foo'); //The html element to become a pdf
-    const pdf = new jsPDF('p', 'pt', 'a4');
-    pdf.addHTML(elementToPrint, () => {
-        doc.save('web.pdf');
-    });
+    var pageHtml = document.documentElement.innerHTML;
+    pageHtml = pageHtml.replace('<body>', '<body class="printing">');
+    document.getElementById('pdfHtml').value = pageHtml;
+    document.getElementById('pdfName').value = this.state.title + ' - ' + this.state.date;
   }
 
   render() {
@@ -176,24 +175,71 @@ class Menu extends React.Component {
     });
 
     return (
-      <div className="menu classic letter-2">
-        <h2 className="menu-title font-header">
-          {this.state.title}
-        </h2>
-        <h4 className="menu-date font-body">
-          {this.state.date}
-        </h4>
+      <div>
+        <div className="menu menu-preview classic letter-2">
+          <h2 className="menu-title font-header">
+            {this.state.title}
+          </h2>
+          <h4 className="menu-date font-body">
+            {this.state.date}
+          </h4>
 
-        <ol className="menu-items">
-          {items}
-          <li>
-            <button onClick={() => this.handleAddItem()} className="btn btn-outline-success">+ Add Item</button>
-          </li>
-        </ol>
+          <ol className="menu-items list-unstyled">
+            {items}
+            <li className="no-print">
+              <button onClick={() => this.handleAddItem()} className="btn btn-outline-secondary">+ Add Item</button>
+            </li>
+          </ol>
+        </div>
+        <div className="menu-print">
+          <div className="row">
+            <div className="col-xs-6">
+              <div className="menu classic letter-2">
+                <h2 className="menu-title font-header">
+                  {this.state.title}
+                </h2>
+                <h4 className="menu-date font-body">
+                  {this.state.date}
+                </h4>
+
+                <ol className="menu-items list-unstyled">
+                  {items}
+                </ol>
+              </div>
+            </div>
+            <div className="col-xs-6">
+              <div className="menu classic letter-2">
+                <h2 className="menu-title font-header">
+                  {this.state.title}
+                </h2>
+                <h4 className="menu-date font-body">
+                  {this.state.date}
+                </h4>
+
+                <ol className="menu-items list-unstyled">
+                  {items}
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+        <form action="https://docraptor.com/docs" target="_blank" method="post">
+          <input type="hidden" name="user_credentials" value="7mR3O2eEXUpCSF9zeTu" />
+          <input type="hidden" name="doc[name]" id="pdfName" value="" />
+          <input type="hidden" name="doc[document_content]" id="pdfHtml" value="" />
+          <input type="hidden" name="doc[type]" value="pdf" />
+          <input type="hidden" name="doc[test]" value="true" />
+          <input type="hidden" name="doc[prince_options][media]" value="screen" />
+          <p className="text-xs-center no-print">
+            <button onClick={() => this.makePdf()} className="btn btn-success btn-lg">Download PDF</button>
+          </p>
+        </form>
       </div>
     );
   }
 }
+
+
 
 
 function formatDate(date) {

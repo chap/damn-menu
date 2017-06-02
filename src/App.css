@@ -3,11 +3,13 @@
   border: 1px solid #eee;
   box-shadow: 0 0 20px rgba(0,0,0,0.5);
   padding-top: 5rem;
+  margin-bottom: 4rem;
 }
+.printing .menu { border: none; }
 
 ol.menu-items {
   list-style-type: none;
-  padding-left: 0;
+  margin-left: 0;
   padding: 0 1rem;
 }
 
@@ -28,7 +30,8 @@ ol.menu-items {
 /* Letter 1/2 */
 .menu.letter-2 {
   max-width: 320px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Classic */
@@ -41,4 +44,30 @@ ol.menu-items {
 }
 .classic.menu .font-body, .classic.menu .item-description, .classic.menu .item-price {
   font-family: 'EB Garamond', serif;
+}
+
+
+/* PDF Generation / Printing*/
+.printing .no-print, .printing .no-print * {
+  display: none !important;
+}
+
+.menu-print {
+  display: none;
+}
+.printing .menu-print {
+  display: block;
+}
+
+.menu-preview {
+  display: block;
+}
+.printing .menu-preview {
+  display: none;
+}
+
+@page {
+  size: US letter;
+  margin: 0; // full-bleed
+  padding: 0;
 }
