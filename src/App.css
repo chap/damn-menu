@@ -42,8 +42,18 @@ ol.menu-items {
   padding: 0;
 }
 
-.menu-item, .menu-date {
+.menu-item {
   margin-bottom: 4rem;
+  position: relative;
+}
+
+.menu-item.editing {
+  /*transform: scale(1.1);*/
+  background: #eee;
+  /*box-shadow: 0 10px 20px rgba(0,0,0,0.5);*/
+}
+.menu-item.editing textarea {
+  background: #eee;
 }
 
 .menu-item p {
@@ -54,6 +64,29 @@ ol.menu-items {
 .menu-item form {
   background-color: #eee;
   padding: 1rem;
+}
+
+.editing .remove-item {
+  display: block;
+}
+.remove-item {
+  font-size: 80%;
+  border: none;
+  border-radius: 3px;
+  text-align: center;
+  margin: 0;
+  background: transparent;
+  color: #666;
+  position: absolute;
+  left: 43%;
+  bottom: -1.5rem;
+  display: none;
+  text-decoration: underline;
+}
+.remove-item:hover {
+  color: white;
+  background: red;
+  text-decoration: none;
 }
 
 /* Letter 1/2 */

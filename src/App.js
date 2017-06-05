@@ -4,13 +4,6 @@ import './App.css';
 import Textarea from 'react-textarea-autosize';
 
 class MenuItem extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      editing: false,
-    }
-  }
-
   handleClick() {
     this.setState({ editing: true })
   }
@@ -24,7 +17,8 @@ class MenuItem extends React.Component {
   render() {
     // debugger;
     return (
-      <li className={"menu-item " + (this.state.editing ? 'editing' : '')} onClick={() => this.handleClick()}>
+      <li className={"menu-item " + (this.props.editing ? 'editing' : '')} onClick={this.props.onItemClick} data-item-index={this.props.itemIndex}>
+        <button onClick={this.props.onItemRemove} className="remove-item no-print" data-item-index={this.props.itemIndex}>remove</button>
         <Textarea
           name="name"
           defaultValue={this.props.name}
@@ -55,40 +49,46 @@ class MenuItem extends React.Component {
 }
 
 class Menu extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     const defaultItems = [
       {
         name: 'Radish Pie',
         description: 'Coriander, fresh horseradish, and reduced cucumber juice',
-        price: '$9'
+        price: '$9',
+        editing: false
       },
       {
         name: 'Cacio e Pepe',
         description: 'Blue durum wheat, Parmigiano-Reggiano, and fermented tomato water',
-        price: '$13'
+        price: '$13',
+        editing: false
       },
       {
         name: 'Black Pepper Pastry',
         description: 'Mini-loaves of black pepper-studded pain au lait',
         // description: '1-2-3-4-5-6-7-8-9-1-2-3-4-5-6-7-8-9-1-2-3-4-5-6-7-8-9-1-2-3-4-5-6-*-8-9-1-2-3-4-5-6-7-8-9-1-2-3-4-5-6-7-8-9',
-        price: '$7'
+        price: '$7',
+        editing: false
       },
       {
         name: 'Vegetable Terrine',
         description: 'Carrots, porcinis, kale, Asian pear, plums, beach onion and plums',
-        price: '$16'
+        price: '$16',
+        editing: false
       },
       {
         name: 'Black Pork Curry Hopper',
         description: 'Fermented rice, coconut milk, black pork kari and dry curry',
-        price: '$18'
+        price: '$18',
+        editing: false
       },
     ]
     this.state = {
       items: defaultItems,
       title: 'Today\'s Specials',
       date: formatDate(new Date()),
+      style: 'classic',
 
       // could probably be props
       titlePlaceholder: 'Today\'s Specials',
@@ -96,6 +96,14 @@ class Menu extends React.Component {
     }
 
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  resetEditingState() {
+    const items = this.state.items.slice();
+    items.forEach(function(item, index, array) {
+      item.editing = false;
+    });
+    this.setState({items: items});
   }
 
   handleChange(event) {
@@ -107,6 +115,22 @@ class Menu extends React.Component {
     this.setState({
       [name]: value
     });
+  }
+
+  handleItemClick(event) {
+    // debugger;
+    // resetEditingState;
+    const target = event.target;
+    const items = this.state.items.slice();
+    items.forEach(function(item, index, array) {
+      item.editing = false;
+    });
+    const itemIndex = parseInt(target.dataset.itemIndex);
+    if (items[itemIndex]) {
+      items[itemIndex].editing = true;
+    }
+
+    this.setState({items: items});
   }
 
   handleItemChange(event) {
@@ -127,23 +151,49 @@ class Menu extends React.Component {
       items: items.concat([{
         name: 'New Item',
         description: 'Description',
-        price: '$?'
+        price: '$?',
+        editing: false
       }])
     });
     // console.log('wtf');
   }
 
+  handleRemoveItem(event) {
+    event.stopPropagation();
+    const target = event.target;
+    const items = this.state.items.slice();
+    const itemIndex = parseInt(target.dataset.itemIndex);
+
+    // const indexInt = parseInt(index);
+    // console.log('removing item:' + indexInt);
+    // // itemIndex = parseInt(itemIndex);
+    // let items = this.state.items.slice();
+    // // console.log('items before')
+    // // console.log(items);
+    items.splice(itemIndex, 1);
+    // // console.log('items after')
+    // // console.log(items);
+    // debugger;
+    this.setState({
+      items: items
+    })
+  }
+
   render() {
     const items = this.state.items.map((item, index) => {
       // debugger;
+      console.log('rendering :'+item.name);
       return (
         <MenuItem
           name={item.name}
           description={item.description}
           price={item.price}
+          editing={item.editing}
           key={index}
           itemIndex={index}
+          onItemClick={(e) => this.handleItemClick(e)}
           onItemChange={(e) => this.handleItemChange(e)}
+          onItemRemove={(e) => this.handleRemoveItem(e)}
         />
       );
     });
@@ -173,6 +223,16 @@ class Menu extends React.Component {
         </ol>
       </div>
     );
+  }
+}
+
+class MenuStyleButton extends React.Component {
+  render() {
+    return (
+      <button className="btn btn-outline-secondary">
+       {this.props.name}
+      </button>
+    )
   }
 }
 
@@ -209,6 +269,10 @@ class MenuContainer extends React.Component {
             </div>
           </div>
         </div>
+        <p className="menu-style-selector text-xs-center">
+          <MenuStyleButton name="classic" />
+          <MenuStyleButton name="modern" />
+        </p>
         <form action="https://docraptor.com/docs" target="_blank" method="post">
           <input type="hidden" name="user_credentials" value="7mR3O2eEXUpCSF9zeTu" />
           <input type="hidden" name="doc[name]" id="pdfName" value="" />
