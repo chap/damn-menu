@@ -112,6 +112,21 @@ ol.menu-items {
   width: 100%;
 }
 
+/* Modern */
+.modern.menu {
+  text-align: left;
+}
+.modern.menu .font-header, .modern.menu .item-name {
+  font-weight: bold;
+}
+.modern.menu .font-body, .modern.menu .item-description, .modern.menu .item-price {
+
+}
+.modern.menu textarea {
+  text-align: left;
+  width: 100%;
+}
+
 
 /* PDF Generation / Printing*/
 .printing .no-print, .printing .no-print * {

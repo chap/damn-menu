@@ -49,67 +49,6 @@ class MenuItem extends React.Component {
 }
 
 class Menu extends React.Component {
-  render() {
-    const items = this.props.items.map((item, index) => {
-      // debugger;
-      console.log('rendering :'+item.name);
-      return (
-        <MenuItem
-          name={item.name}
-          description={item.description}
-          price={item.price}
-          editing={item.editing}
-          key={index}
-          itemIndex={index}
-          onItemClick={(e) => this.props.handleItemClick(e)}
-          onItemChange={(e) => this.props.handleItemChange(e)}
-          onItemRemove={(e) => this.props.handleRemoveItem(e)}
-        />
-      );
-    });
-
-    return (
-      <div className={"menu letter-2 " + this.props.style} id="master-menu" title={this.props.title + ' - ' + this.props.date}>
-        <Textarea
-          name="title"
-          defaultValue={this.props.title}
-          className="menu-title font-header"
-          placeholder={this.props.titlePlaceholder}
-          onChange={this.props.handleChange}
-        ></Textarea>
-        <Textarea
-          name="date"
-          defaultValue={this.props.date}
-          className="menu-date font-body"
-          placeholder={this.props.datePlaceholder}
-          onChange={this.props.handleChange}
-        ></Textarea>
-
-        <ol className="menu-items list-unstyled">
-          {items}
-          <li className="no-print">
-            <button onClick={() => this.props.handleAddItem()} className="btn btn-outline-secondary">+ Add Item</button>
-          </li>
-        </ol>
-      </div>
-    );
-  }
-}
-
-class MenuStyleButton extends React.Component {
-  render() {
-    return (
-      <button
-        className={"btn " + (this.props.name === this.props.activeStyle ? 'btn-secondary active' : 'btn-outline-secondary')}
-        onClick={(e) => this.props.onClick(e)}
-      >
-       {this.props.name}
-      </button>
-    )
-  }
-}
-
-class MenuContainer extends React.Component {
   constructor(props) {
     super(props);
     const defaultItems = [
@@ -240,22 +179,65 @@ class MenuContainer extends React.Component {
     })
   }
 
-  handleStyleChange(event) {
-    // debugger;
-    const target = event.target;
-    const value = target.textContent;
-
-    this.setState({style: value});
-  }
-
-  makePdf(e) {
-    // make sure no items active
-    const items = this.state.items.slice();
-    items.forEach(function(item, index, array) {
-      item.editing = false;
+  render() {
+    const items = this.state.items.map((item, index) => {
+      // debugger;
+      console.log('rendering :'+item.name);
+      return (
+        <MenuItem
+          name={item.name}
+          description={item.description}
+          price={item.price}
+          editing={item.editing}
+          key={index}
+          itemIndex={index}
+          onItemClick={(e) => this.handleItemClick(e)}
+          onItemChange={(e) => this.handleItemChange(e)}
+          onItemRemove={(e) => this.handleRemoveItem(e)}
+        />
+      );
     });
-    this.setState({items: items});
 
+    return (
+      <div className="menu classic letter-2" id="master-menu" title={this.state.title + ' - ' + this.state.date}>
+        <Textarea
+          name="title"
+          defaultValue={this.state.title}
+          className="menu-title font-header"
+          placeholder={this.state.titlePlaceholder}
+          onChange={this.handleChange}
+        ></Textarea>
+        <Textarea
+          name="date"
+          defaultValue={this.state.date}
+          className="menu-date font-body"
+          placeholder={this.state.datePlaceholder}
+          onChange={this.handleChange}
+        ></Textarea>
+
+        <ol className="menu-items list-unstyled">
+          {items}
+          <li className="no-print">
+            <button onClick={() => this.handleAddItem()} className="btn btn-outline-secondary">+ Add Item</button>
+          </li>
+        </ol>
+      </div>
+    );
+  }
+}
+
+class MenuStyleButton extends React.Component {
+  render() {
+    return (
+      <button className="btn btn-outline-secondary">
+       {this.props.name}
+      </button>
+    )
+  }
+}
+
+class MenuContainer extends React.Component {
+  makePdf(e) {
     const pdfName = simpleEncode(document.getElementById('master-menu').title);
     document.getElementById('pdfName').value = pdfName;
 
@@ -271,26 +253,13 @@ class MenuContainer extends React.Component {
     var pageHtml = document.documentElement.innerHTML;
     pageHtml = pageHtml.replace('<body>', '<body class="printing">');
     document.getElementById('pdfHtml').value = pageHtml;
-
-    console.log('pageHtml:')
-    console.log(pageHtml)
   }
 
   render() {
     return (
       <div className="menu-container">
         <div className="menu-preview">
-          <Menu
-            style={this.state.style}
-            items={this.state.items}
-            title={this.state.title}
-            date={this.state.date}
-            titlePlaceholder={this.state.titlePlaceholder}
-            datePlaceholder={this.state.datePlaceholder}
-            handleItemClick={(e) => this.handleItemClick(e)}
-            handleItemChange={(e) => this.handleItemChange(e)}
-            handleRemoveItem={(e) => this.handleRemoveItem(e)}
-          />
+          <Menu />
         </div>
         <div className="menu-print">
           <div className="row">
@@ -300,18 +269,9 @@ class MenuContainer extends React.Component {
             </div>
           </div>
         </div>
-        <p className="menu-style-selector text-xs-center no-print">
-          <MenuStyleButton
-            name="classic"
-            activeStyle={this.state.style}
-            onClick={(e) => this.handleStyleChange(e)}
-          />
-          &nbsp;
-          <MenuStyleButton
-            name="modern"
-            activeStyle={this.state.style}
-            onClick={(e) => this.handleStyleChange(e)}
-          />
+        <p className="menu-style-selector text-xs-center">
+          <MenuStyleButton name="classic" active="true" />
+          <MenuStyleButton name="modern" />
         </p>
         <form action="https://docraptor.com/docs" target="_blank" method="post">
           <input type="hidden" name="user_credentials" value="aic1MYUlX0jpMCOm8RG7" />
