@@ -250,11 +250,11 @@ class MenuContainer extends React.Component {
 
   makePdf(e) {
     // make sure no items active
-    const items = this.state.items.slice();
-    items.forEach(function(item, index, array) {
-      item.editing = false;
-    });
-    this.setState({items: items});
+    // const items = this.state.items.slice();
+    // items.forEach(function(item, index, array) {
+    //   item.editing = false;
+    // });
+    // this.setState({items: items});
 
     const pdfName = simpleEncode(document.getElementById('master-menu').title);
     document.getElementById('pdfName').value = pdfName;
