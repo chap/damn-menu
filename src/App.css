@@ -115,6 +115,7 @@ ol.menu-items {
 /* Modern */
 .modern.menu {
   text-align: left;
+  padding-left: 5px;
 }
 .modern.menu .font-header, .modern.menu .item-name {
   font-weight: bold;
