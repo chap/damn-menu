@@ -322,7 +322,7 @@ class MenuContainer extends React.Component {
           <input type="hidden" name="doc[prince_options][media]" value="screen" />
           <input type="hidden" name="doc[prince_options][baseurl]" id="baseUrl" value="screen" />
           <p className="text-xs-center no-print">
-            <button onClick={(e) => this.makePdf(e)} className="btn btn-success btn-lg">Download PDF for Printing</button>
+            <button onClick={(e) => this.makePdf(e)} className="btn btn-success btn-lg">📄Download PDF for Printing</button>
           </p>
         </form>
       </div>
