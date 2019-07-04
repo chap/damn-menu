@@ -5,7 +5,7 @@
 */
 
 html, body {
-  background: #eee;
+  background: #fff;
 }
 
 .menu {
@@ -91,6 +91,9 @@ ol.menu-items {
   color: white;
   background: red;
   text-decoration: none;
+}
+.add-item {
+  text-align: center;
 }
 
 /* Letter 1/2 */

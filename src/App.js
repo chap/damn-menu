@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 // import logo from './logo.svg';
 import './App.css';
 import Textarea from 'react-textarea-autosize';
+// import { DragDropContext } from 'react-beautiful-dnd';
 
 class MenuItem extends React.Component {
   handleClick() {
@@ -90,8 +91,8 @@ class Menu extends React.Component {
 
         <ol className="menu-items list-unstyled">
           {items}
-          <li className="no-print">
-            <button onClick={this.props.handleAddItem} className="btn btn-outline-secondary">+ Add Item</button>
+          <li className="no-print add-item">
+            <button onClick={this.props.handleAddItem} className="btn btn-outline-success add-item">+ Add Item</button>
           </li>
         </ol>
       </div>
@@ -103,7 +104,7 @@ class MenuStyleButton extends React.Component {
   render() {
     return (
       <button
-        className={"btn " + (this.props.name === this.props.activeStyle ? 'btn-secondary active' : 'btn-outline-secondary')}
+        className={"btn " + (this.props.name === this.props.activeStyle ? 'btn active' : 'btn-outline-secondary active')}
         onClick={(e) => this.props.onClick(e)}
       >
        {this.props.name}
@@ -164,7 +165,7 @@ class MenuContainer extends React.Component {
   }
 
   handleAddItem(event) {
-    // const items = this.props.items;
+    this.resetEditingState();
     const items = this.state.items;
     const newItem = [{
       name: 'New Item',
@@ -172,17 +173,9 @@ class MenuContainer extends React.Component {
       price: '$?',
       editing: true
     }];
-    // this.props.items = [];
     this.setState({
       items: items.concat(newItem)
     });
-    // this.setState({
-    //   items: []
-    // });
-    // this.setState({
-    //   items: newItem
-    // });
-    // console.log('wtf');
   }
 
   resetEditingState() {
@@ -330,7 +323,7 @@ class MenuContainer extends React.Component {
           <input type="hidden" name="doc[prince_options][media]" value="screen" />
           <input type="hidden" name="doc[prince_options][baseurl]" id="baseUrl" value="screen" />
           <p className="text-xs-center no-print">
-            <button onClick={(e) => this.makePdf(e)} className="btn btn-success btn-lg">📄Download PDF for Printing</button>
+            <button onClick={(e) => this.makePdf(e)} className="btn btn-primary btn-lg">📄Download PDF for Printing</button>
           </p>
         </form>
       </div>
