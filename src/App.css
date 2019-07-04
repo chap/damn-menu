@@ -4,9 +4,13 @@
 
 */
 
+html, body {
+  background: #eee;
+}
+
 .menu {
   /*background-image: image-url('patterns/linen.png');*/
-  /*background-color: pink;*/
+  background-color: #fff;
   border: 1px solid #eee;
   box-shadow: 0 0 20px rgba(0,0,0,0.5);
   padding-top: 5rem;

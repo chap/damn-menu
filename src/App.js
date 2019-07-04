@@ -21,7 +21,7 @@ class MenuItem extends React.Component {
         <button onClick={this.props.onItemRemove} className="remove-item no-print" data-item-index={this.props.itemIndex}>remove</button>
         <Textarea
           name="name"
-          defaultValue={this.props.name}
+          value={this.props.name}
           className="item-name"
           placeholder="Item Name"
           data-item-index={this.props.itemIndex}
@@ -29,7 +29,7 @@ class MenuItem extends React.Component {
         ></Textarea>
         <Textarea
           name="description"
-          defaultValue={this.props.description}
+          value={this.props.description}
           className="item-description"
           placeholder="Item description"
           data-item-index={this.props.itemIndex}
@@ -37,7 +37,7 @@ class MenuItem extends React.Component {
         ></Textarea>
         <Textarea
           name="price"
-          defaultValue={this.props.price}
+          value={this.props.price}
           className="item-price"
           placeholder="$5.99"
           data-item-index={this.props.itemIndex}
@@ -49,7 +49,10 @@ class MenuItem extends React.Component {
 }
 
 class Menu extends React.Component {
+
   render() {
+    console.log('items :'+this.props.items[0]);
+    console.log(this.props.items);
     const items = this.props.items.map((item, index) => {
       // debugger;
       console.log('rendering :'+item.name);
@@ -88,7 +91,7 @@ class Menu extends React.Component {
         <ol className="menu-items list-unstyled">
           {items}
           <li className="no-print">
-            <button onClick={() => this.props.handleAddItem()} className="btn btn-outline-secondary">+ Add Item</button>
+            <button onClick={this.props.handleAddItem} className="btn btn-outline-secondary">+ Add Item</button>
           </li>
         </ol>
       </div>
@@ -157,6 +160,29 @@ class MenuContainer extends React.Component {
     }
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleAddItem = this.handleAddItem.bind(this);
+  }
+
+  handleAddItem(event) {
+    // const items = this.props.items;
+    const items = this.state.items;
+    const newItem = [{
+      name: 'New Item',
+      description: 'Description',
+      price: '$?',
+      editing: true
+    }];
+    // this.props.items = [];
+    this.setState({
+      items: items.concat(newItem)
+    });
+    // this.setState({
+    //   items: []
+    // });
+    // this.setState({
+    //   items: newItem
+    // });
+    // console.log('wtf');
   }
 
   resetEditingState() {
@@ -206,35 +232,16 @@ class MenuContainer extends React.Component {
     this.setState({items: items});
   }
 
-  handleAddItem() {
-    const items = this.state.items.slice();
-    this.setState({
-      items: items.concat([{
-        name: 'New Item',
-        description: 'Description',
-        price: '$?',
-        editing: false
-      }])
-    });
-    // console.log('wtf');
-  }
+
 
   handleRemoveItem(event) {
     event.stopPropagation();
     const target = event.target;
-    const items = this.state.items.slice();
+    var items = this.state.items;
     const itemIndex = parseInt(target.dataset.itemIndex);
-
-    // const indexInt = parseInt(index);
-    // console.log('removing item:' + indexInt);
-    // // itemIndex = parseInt(itemIndex);
-    // let items = this.state.items.slice();
-    // // console.log('items before')
-    // // console.log(items);
+    console.log('itemIndex:'+ itemIndex);
     items.splice(itemIndex, 1);
-    // // console.log('items after')
-    // // console.log(items);
-    // debugger;
+
     this.setState({
       items: items
     })
@@ -290,6 +297,7 @@ class MenuContainer extends React.Component {
             handleItemClick={(e) => this.handleItemClick(e)}
             handleItemChange={(e) => this.handleItemChange(e)}
             handleRemoveItem={(e) => this.handleRemoveItem(e)}
+            handleAddItem={(e) => this.handleAddItem(e)}
           />
         </div>
         <div className="menu-print">
