@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // import logo from './logo.svg';
 import './App.css';
 import Textarea from 'react-textarea-autosize';
-// import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
 
 class MenuItem extends React.Component {
   handleClick() {
@@ -173,9 +173,14 @@ class MenuContainer extends React.Component {
       price: '$?',
       editing: true
     }];
-    this.setState({
-      items: items.concat(newItem)
-    });
+    this.setState(
+      {items: items.concat(newItem)},
+      () => {
+        const input = document.getElementsByClassName('item-name')[document.getElementsByClassName('item-name').length - 1];
+        input.focus();
+        input.select();
+      }
+    );
   }
 
   resetEditingState() {
