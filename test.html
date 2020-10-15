@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+  <link rel="stylesheet" href="src/reset.css" type="text/css">
+  <script src="src/Sortable.js"></script>
+  <script type="text/javascript">
+    let dragging = false;
+
+     function rotateMenu(event) {
+      // console.log(event);
+      const paper = document.getElementsByClassName('paper')[0];
+      var rotate = -5.0;
+      var mouseY = event.clientY;
+      // paperHeight = paper.offsetHeight;
+      rotate = rotate + mouseY;
+      // console.log(`mouseY:${mouseY}`)
+      rotate = rotate * 0.01
+      if (rotate > 0) {
+        rotate = Math.min(rotate, 10);
+      } else {
+        rotate = Math.max(rotate, -10);
+      }
+        // console.log(`rotate:${rotate}`)
+        paper.style["transform"] = `scale(0.8) perspective(400px) rotateX(${rotate}deg)`
+     }
+
+     window.onload = function(){
+        // var list = document.getElementById('menu-items');
+        // Sortable.create(list);
+
+        var elements = document.getElementsByClassName("menu-item");
+
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].addEventListener('mouseenter', function() {if(!dragging){this.classList.add('menu-item--hover')}}, false);
+            elements[i].addEventListener('mouseleave', function() {if(!dragging){this.classList.remove('menu-item--hover')}}, false);
+        }
+
+        
+            var dragItem = document.querySelector("#item");
+    var container = document.querySelector("#paper");
+
+    var active = false;
+    var currentX;
+    var currentY;
+    var initialX;
+    var initialY;
+    var xOffset = 0;
+    var yOffset = 0;
+
+    container.addEventListener("touchstart", dragStart, false);
+    container.addEventListener("touchend", dragEnd, false);
+    container.addEventListener("touchmove", drag, false);
+
+    container.addEventListener("mousedown", dragStart, false);
+    container.addEventListener("mouseup", dragEnd, false);
+    container.addEventListener("mousemove", drag, false);
+
+    function dragStart(e) {
+      dragging = true;
+      console.log('dragstart')
+      if (e.type === "touchstart") {
+        initialX = e.touches[0].clientX - xOffset;
+        initialY = e.touches[0].clientY - yOffset;
+      } else {
+        initialX = e.clientX - xOffset;
+        initialY = e.clientY - yOffset;
+      }
+
+      // if (e.target === dragItem) {
+        active = true;
+      // }
+    }
+
+    function dragEnd(e) {
+      dragging = false;
+      console.log('dragend')
+      initialX = currentX;
+      initialY = currentY;
+
+      active = false;
+    }
+
+    function drag(e) {
+      if (active) {
+      
+        e.preventDefault();
+      
+        if (e.type === "touchmove") {
+          currentX = e.touches[0].clientX - initialX;
+          currentY = e.touches[0].clientY - initialY;
+        } else {
+          currentX = e.clientX - initialX;
+          currentY = e.clientY - initialY;
+        }
+
+        xOffset = currentX;
+        yOffset = currentY;
+
+        setTranslate(currentX, currentY, dragItem);
+      }
+    }
+
+    function setTranslate(xPos, yPos, el) {
+      // console.log(`${xPos} ${yPos}`)
+      // el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
+      el.style.transform = "translate3d(0, " + yPos + "px, 0 )";
+    }
+      }
+  </script>
+
+	<style type="text/css">
+    html {
+      background: #333;
+      background-image: url('src/restaurant-background-blur.jpg');
+      background-size: cover;
+    }
+    body {
+/*      margin-top: 100px;
+      padding-top: 100px;*/
+    }
+    .paper {
+      max-width: 400px;
+      height: 700px;
+      margin: 0 auto;
+      background: #fff;
+      transform: scale(0.8) perspective(400px) rotateX(-5deg);
+      box-shadow: 50px 100px 100px rgba(0,0,0,0.8);
+    }
+    header {
+      padding: 50px;
+      padding-bottom: 0px;
+    }
+    h2 {
+      margin-bottom: 2em;
+    }
+    .menu-item {
+      margin-bottom: 1em;
+      padding: 25px 50px;
+      border: 1px solid transparent;
+    }
+    .menu-item--hover {
+      border: 1px solid #ccc;
+      background: #fff;
+      box-shadow: 5px 10px 10px rgba(0,0,0,0.2);
+
+      animation: shake 0.5s;
+      animation-iteration-count: infinite;
+    }
+    h3 {
+      font-weight: bold;
+    }
+
+    @keyframes shake {
+      0% { transform: scale(1.1) translate(1px, 1px) rotate(0deg); }
+      10% { transform: scale(1.1) translate(-1px, -2px) rotate(-1deg); }
+      20% { transform: scale(1.1) translate(-3px, 0px) rotate(1deg); }
+      30% { transform: scale(1.1) translate(3px, 2px) rotate(0deg); }
+      40% { transform: scale(1.1) translate(1px, -1px) rotate(1deg); }
+      50% { transform: scale(1.1) translate(-1px, 2px) rotate(-1deg); }
+      60% { transform: scale(1.1) translate(-3px, 1px) rotate(0deg); }
+      70% { transform: scale(1.1) translate(3px, 1px) rotate(-1deg); }
+      80% { transform: scale(1.1) translate(-1px, -1px) rotate(1deg); }
+      90% { transform: scale(1.1) translate(1px, 2px) rotate(0deg); }
+      100% { transform: scale(1.1) translate(1px, -2px) rotate(-1deg); }
+    }
+	</style>
+</head>
+<body>
+	<div class="paper" id="paper" onmousemove="rotateMenu(event)">
+    <header>
+		  <h1>Today's Specials</h1>
+		  <h2>October 15th</h2>
+    </header>
+
+    <ol id="menu-items">
+  		<li id="item">
+        <div class="menu-item">
+          <h3>Radish Pie</h3>
+    		  <h4>Coriander, fresh horseradish, and reduced cucumber juice</h4>
+    		  <h5>$9</h5>
+        </div>
+      </li>
+      <li>
+        <div class="menu-item">
+          <h3>Cacio e Pepe</h3>
+          <h4>Blue durum wheat, Parmigiano-Reggiano, and fermented tomato water</h4>
+          <h5>$13</h5>
+        </div>
+      </li>
+      <li>
+        <div class="menu-item">
+          <h3>Black Pepper Pastry</h3>
+          <h4>Mini-loaves of black pepper-studded pain au lait</h4>
+          <h5>$7</h5>
+        </div>
+      </li>
+    </ol>
+
+	</div>
+</body>
+</html>
