@@ -9,7 +9,7 @@
     "react-textarea-autosize": "^7.1.0"
   },
   "devDependencies": {
-    "react-scripts": "3.0.1",
+    "react-scripts": "5.0.1",
     "typescript": "^3.5.2"
   },
   "scripts": {
